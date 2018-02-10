@@ -14,12 +14,8 @@ from itertools import combinations_with_replacement
 
 import numpy
 
-<<<<<<< HEAD
-from . import logfileparser, utils
-=======
 from cclib.parser import logfileparser
 from cclib.parser import utils
->>>>>>> 3026637b51b205ae9fcc32188d226c9d3da3a1c6
 
 
 def create_atomic_orbital_names(orbitals):
@@ -43,12 +39,8 @@ def create_atomic_orbital_names(orbitals):
     for i, orb in enumerate(orbitals):
 
         # Cartesian can be generated directly by combinations.
-<<<<<<< HEAD
         cartesian = [''.join(x) for x in
                      combinations_with_replacement(['x', 'y', 'z'], i + 2)]
-=======
-        cartesian = list(map(''.join, list(itertools.combinations_with_replacement(['x', 'y', 'z'], i+2))))
->>>>>>> 3026637b51b205ae9fcc32188d226c9d3da3a1c6
 
         # For spherical functions, we need to construct the names.
         pre = str(i+3) + orb.lower()
@@ -186,11 +178,7 @@ class Molpro(logfileparser.Logfile):
                             aonum += 1
                         else:
                             functype = s
-<<<<<<< HEAD
                             element = self.table.element[self.atomnos[atomno - 1]]
-=======
-                            element = self.table.element[self.atomnos[atomno-1]]
->>>>>>> 3026637b51b205ae9fcc32188d226c9d3da3a1c6
                             aoname = "%s%i_%s" % (element, atomno, functype)
                             aonames.append(aoname)
                     line = next(inputfile)
@@ -237,13 +225,8 @@ class Molpro(logfileparser.Logfile):
                 line = next(inputfile)
             mocoeffs.append(coeffs)
 
-<<<<<<< HEAD
-            # The loop should keep going until there is a double blank line,
-            # and there is a single line between each coefficient block.
-=======
             # The loop should keep going until there is a double blank line, and there is
             # a single line between each coefficient block.
->>>>>>> 3026637b51b205ae9fcc32188d226c9d3da3a1c6
             line = next(inputfile)
             if not line.strip():
                 line = next(inputfile)
@@ -909,10 +892,7 @@ class Molpro(logfileparser.Logfile):
             lines_read = 0
             while lines_read < self.natom:
                 line = next(inputfile)
-<<<<<<< HEAD
-=======
                 # Because molpro inserts an empty line every 50th atom.
->>>>>>> 3026637b51b205ae9fcc32188d226c9d3da3a1c6
                 if line:
                     grad.append([float(x) for x in line.split()[1:]])
                     lines_read += 1
@@ -920,10 +900,6 @@ class Molpro(logfileparser.Logfile):
                 self.grads = []
             self.grads.append(grad)
 
-<<<<<<< HEAD
-
-=======
->>>>>>> 3026637b51b205ae9fcc32188d226c9d3da3a1c6
 
 if __name__ == "__main__":
     import doctest
