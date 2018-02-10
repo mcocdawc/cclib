@@ -65,12 +65,12 @@ from cclib.io import ccopen
 # within the cclib repository. It would be better to figure out a more natural
 # way to import the relevant tests from cclib here.
 test_dir = os.path.realpath(os.path.dirname(__file__)) + "/../../test"
-sys.path.append(os.path.abspath(test_dir))
-from test_data import all_modules
-from test_data import all_parsers
-from test_data import module_names
-from test_data import parser_names
-from test_data import get_program_dir
+sys.path.insert(1, os.path.abspath(test_dir))
+from .test_data import all_modules
+from .test_data import all_parsers
+from .test_data import module_names
+from .test_data import parser_names
+from .test_data import get_program_dir
 
 
 # We need this to point to files relative to this script.
@@ -1282,6 +1282,19 @@ def testQChem_QChem4_4_top_out(logfile):
     assert logfile.data.mocoeffs[0].shape == (nmo, nbasis)
     assert logfile.data.mocoeffs[0].T[6, 5] == 0.8115082
 
+
+def testQChem_QChem5_0_argon_out(logfile):
+    """This job has unit specifications at the end of 'Total energy for
+    state' lines.
+    """
+    nroots = 12
+    assert len(logfile.data.etenergies) == nroots
+    state_0_energy = -526.6323968555
+    state_1_energy = -526.14663738
+    assert logfile.data.scfenergies[0] == convertor(state_0_energy, 'hartree', 'eV')
+    assert abs(logfile.data.etenergies[0] - convertor(state_1_energy - state_0_energy, 'hartree', 'cm-1')) < 1.0e-1
+
+
 def testORCA_ORCA3_0_chelpg_out(logfile):
     """orca file with chelpg charges"""
     assert 'chelpg' in logfile.data.atomcharges
@@ -1335,7 +1348,7 @@ def flatten(seq):
 def normalisefilename(filename):
     """Replace all non-alphanumeric symbols by underscores.
 
-    >>> import regression
+    >>> from . import regression
     >>> for x in [ "Gaussian/Gaussian03/Mo4OSibdt2-opt.log" ]:
     ...     print(regression.normalisefilename(x))
     ...
@@ -1572,7 +1585,7 @@ old_unittests = {
 
     "GAMESS/WinGAMESS/dvb_td_2007.03.24.r1.out":    GAMESSUSTDDFTTest,
 
-    "Gaussian/Gaussian09/dvb_gopt_revA.02.out":         GaussianGeoOptTest,
+    "Gaussian/Gaussian09/dvb_gopt_revA.02.out":         GenericGeoOptTest,
     "Gaussian/Gaussian09/dvb_ir_revA.02.out":           GaussianIRTest,
     "Gaussian/Gaussian09/dvb_raman_revA.02.out":        GaussianRamanTest,
     "Gaussian/Gaussian09/dvb_scan_revA.02.log":         GaussianScanTest,

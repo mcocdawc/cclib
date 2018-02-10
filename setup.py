@@ -12,10 +12,9 @@ chemistry log files. It also provides a platform to implement
 algorithms in a package-independent manner.
 """
 
-from __future__ import with_statement
-from __future__ import absolute_import
-from setuptools import setup, find_packages
-from io import open  # pylint:disable=redefined-builtin
+from __future__ import absolute_import, with_statement
+
+import setuptools
 
 
 # Chosen from http://www.python.org/pypi?:action=list_classifiers
@@ -31,17 +30,11 @@ Topic :: Scientific/Engineering :: Chemistry
 Topic :: Software Development :: Libraries :: Python Modules"""
 
 
-def readme():
-    '''Return the contents of the README.md file.'''
-    with open('README.md') as freadme:
-        return freadme.read()
-
-
 def setup_cclib():
 
     doclines = __doc__.split("\n")
 
-    setup(
+    setuptools.setup(
         name="cclib",
         version="1.5.2",
         url="http://cclib.github.io/",
@@ -54,7 +47,7 @@ def setup_cclib():
         long_description="\n".join(doclines[2:]),
         classifiers=classifiers.split("\n"),
         platforms=["Any."],
-        packages=find_packages('src'),
+        packages=setuptools.find_packages('src'),
         package_dir={'': 'src'},
         scripts=["src/scripts/ccget", "src/scripts/ccwrite", "src/scripts/cda"]
     )

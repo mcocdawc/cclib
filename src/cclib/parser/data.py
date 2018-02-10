@@ -75,6 +75,8 @@ class ccData(object):
         scftargets -- targets for convergence of the SCF (array[2])
         scfvalues -- current values for convergence of the SCF (list of arrays[2])
         temperature -- temperature used for Thermochemistry (float, kelvin)
+        transprop -- all absorption and emission spectra (dictionary {name:(etenergies, etoscs)})
+            WARNING: this attribute is not standardized and is liable to change in cclib 2.0
         time -- time in molecular dynamics and other trajectories (array[1], fs)
         vibanharms -- vibrational anharmonicity constants (array[2], 1/cm)
         vibdisps -- cartesian displacement vectors (array[3], delta angstrom)
@@ -145,6 +147,7 @@ class ccData(object):
        "scftargets":       Attribute(numpy.ndarray,    'targets',                     'optimization:scf'),
        "scfvalues":        Attribute(list,             'values',                      'optimization:scf'),
        "temperature":      Attribute(float,            'temperature',                 'properties'),
+       "transprop":        Attribute(dict,             'electronic transitions',      'transitions'),
        "time":             Attribute(numpy.ndarray,    'time',                        'N/A'),
        "vibanharms":       Attribute(numpy.ndarray,    'anharmonicity constants',     'vibrations'),
        "vibdisps":         Attribute(numpy.ndarray,    'displacement',                'vibrations'),
@@ -283,7 +286,7 @@ class ccData(object):
                 args = (attr, type(val), self._attributes[attr].type)
                 raise TypeError("attribute %s is %s instead of %s and could not be converted" % args)
 
-    def write(self, filename=None, *args, **kwargs):
+    def write(self, filename=None, indices=None, *args, **kwargs):
         """Write parsed attributes to a file.
 
         Possible extensions:
@@ -292,21 +295,25 @@ class ccData(object):
           .xyz - output a Cartesian XYZ file of the last coordinates available
         """
 
-        from ..io import ccwrite
-        outputstr = ccwrite(self, outputdest=filename, *args, **kwargs)
+        from cclib.io import ccwrite
+        outputstr = ccwrite(self, outputdest=filename, indices=indices,
+                            *args, **kwargs)
         return outputstr
 
-    def writejson(self, filename=None):
+    def writejson(self, filename=None, indices=None):
         """Write parsed attributes to a JSON file."""
-        return self.write(filename=filename, outputtype='cjson')
+        return self.write(filename=filename, indices=indices,
+                          outputtype='cjson')
 
-    def writecml(self, filename=None):
+    def writecml(self, filename=None, indices=None):
         """Write parsed attributes to a CML file."""
-        return self.write(filename=filename, outputtype='cml')
+        return self.write(filename=filename, indices=indices,
+                          outputtype='cml')
 
-    def writexyz(self, filename=None):
+    def writexyz(self, filename=None, indices=None):
         """Write parsed attributes to an XML file."""
-        return self.write(filename=filename, outputtype='xyz')
+        return self.write(filename=filename, indices=indices,
+                          outputtype='xyz')
 
     @property
     def converged_geometries(self):
